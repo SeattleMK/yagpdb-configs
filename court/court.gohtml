@@ -1,0 +1,13 @@
+---
+command: !court
+server: Tex Mechs
+description: A command for warned/muted users to use in #courtroom-lobby, in order to open a ticket. When the ticket is opened, their warning history will be posted automatically.
+prereqs: Tools & Utilities > Ticket System > Tickets enabled
+---
+
+{{ $resp := (exec "ticket new" .User.Username) }}
+{{ $channel := (reFind "<#\\d{18,}>" $resp) }}
+{{ $chanID := (reFind "\\d{18,}" $channel) }}
+{{ sendMessage $chanID " " }}
+{{ sendMessage $chanID "Your warning history:" }}
+{{ sendMessage $chanID (execAdmin "warnings" .User.Mention) }}

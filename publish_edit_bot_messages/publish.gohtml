@@ -1,0 +1,17 @@
+---
+command: !publish
+server: Tex Mechs
+description: Sends a message as YAGPDB
+syntax: !publish #ChannelName "Message here"
+---
+
+{{if eq (len .Args) 3}}
+    {{$args := parseArgs 2 "" (carg "channel" "channel to send to") (carg "string" "text to send")}}
+    {{$channel := ($args.Get 0).ID}}
+    {{$msg := $args.Get 1}}
+    {{ $embed := cembed "content" $msg }}
+    {{sendMessageNoEscape $channel $msg }}
+    {{ deleteTrigger  0 }}
+{{else}}
+    Correct usage of the command: !publish <channel-name> "<message>"
+{{end}}

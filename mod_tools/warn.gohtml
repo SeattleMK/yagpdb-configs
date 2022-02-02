@@ -1,0 +1,24 @@
+---
+command: !warn
+server: Tex Mechs
+description: Times out a user for a given amount of time, and applies a warning
+---
+
+{{$res := (reFindAll "\\d+[mMhHdDwW]" .Message.Content) }}
+{{if gt (len $res) 0}}
+    {{$time := (index (reFindAll "\\d+" (index $res 0)) 0) }}
+    {{$unit := lower (index (split (index $res 0) $time) 1) }}
+    {{$duration := 60}}
+    {{if eq $unit "m"}}
+        {{$duration = toInt $time}}
+    {{else if eq $unit "h"}}
+        {{$duration = (mult (toInt $time) 60) }}
+    {{else if eq $unit "d"}}
+        {{$duration = (mult (mult (toInt $time) 60) 24) }}
+    {{else if eq $unit "w"}}
+        {{$duration = (mult (mult (mult (toInt $time) 60) 24) 7) }}
+    {{end}}
+    {{ exec "mute" (index .Message.Mentions 0) $duration }}
+{{else}}
+    {{ exec "mute" (index .Message.Mentions 0) 60 }}
+{{end}}

@@ -1,0 +1,13 @@
+---
+trigger: Reaction (Added reactions only)
+server: Tex Mechs
+description: Monitors reactions on a specific message, and posts in the mod channel. Used when we had an open 1-click application for Dallas mod.
+---
+
+{{if eq .Message.ID 779591937048576011 }}
+    {{sendDM "Thanks for applying for Dallas Mod!"}}
+    {{deleteMessageReaction nil .Reaction.MessageID .Reaction.UserID "txpewpew:682775336143814656"}}
+    {{$user := (userArg .Reaction.UserID)}}
+    {{$template := joinStr  " " $user.Mention "has applied for Dallas Mod"}}
+    {{sendMessage 517906826520428545  $template}}
+{{end}}

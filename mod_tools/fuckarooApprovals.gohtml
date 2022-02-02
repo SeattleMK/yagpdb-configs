@@ -1,0 +1,20 @@
+---
+trigger: Reaction (added reactions only)
+server: Tex Mechs
+description: Watches for reactions on Tatsu messages in #mods, indicating that a user has reached the threshhold for #fuckaroos. Once three 👍s are added, the user is assigned the "not my first rodeo" role, and a welcome message is posted in #fuckaroos.
+---
+
+{{if and (eq .Message.Author.ID 172002275412279296) (eq .Reaction.Emoji.Name "👍")}}
+    {{$user := index .Message.Mentions 0}}
+    {{$rodeoRole := 862173313798373386}}
+    {{$buckaroosChannel := 867910978078117958}}
+    {{range .ReactionMessage.Reactions}}
+        {{if and (eq .Emoji.Name "👍") (ge .Count 3) }}
+            {{if not (targetHasRoleID $user.ID $rodeoRole) }}
+                {{giveRoleID $user.ID $rodeoRole}}
+                {{$msg := (printf "It's not %v's first rodeo" $user.Mention) }}
+                {{sendMessage $buckaroosChannel $msg}}
+            {{end}}
+        {{end}}
+    {{end}}
+{{end}}

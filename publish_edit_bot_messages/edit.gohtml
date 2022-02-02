@@ -1,0 +1,14 @@
+---
+command: !edit
+server: Tex Mechs
+description: Edits a message sent as YAGPDB
+syntax: !edit #ChannelName MessageID "Edited message here"
+---
+
+{{if eq (len .Args) 4}}
+    {{$args := parseArgs 2 "" (carg "channel" "channel to send to") (carg "string" "ID of the message to edit") (carg "string" "text to send")}}
+    {{editMessageNoEscape ($args.Get 0).ID ($args.Get 1) ($args.Get 2)}}
+    {{ deleteTrigger  0 }}
+{{else}}
+    Correct usage of the command: !edit <channel-name> <message-id> "<message>"
+{{end}}

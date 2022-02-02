@@ -1,0 +1,13 @@
+---
+command: !resolve
+server: Tex Mechs
+description: Closes/archives the user ticket channel
+---
+
+{{$res := (split .Message.Content "!resolve ") }}
+{{if gt (len $res) 1}}
+    {{$reason := (index $res 1)}}
+    {{exec "tickets close" $reason}}
+{{else}}
+    {{exec "tickets close"}}
+{{end}}

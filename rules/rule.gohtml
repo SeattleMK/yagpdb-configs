@@ -1,0 +1,48 @@
+---
+regex: !rule\d~
+server: Omnitype
+description: Grabs the text from the #welcome rules message, and returns the specified rule. (ex: !rule8)
+---
+
+{{$rulesMsg := getMessage 500408739866738689 509432636494708756}}
+{{$rules := $rulesMsg.Content}}
+{{$lines := split $rules "\n"}}
+{{$linesToPrint := cslice }}
+{{$inRules := false}}
+{{$inLinks := false}}
+{{$ruleNum := reFind `\d+` .Cmd}}
+
+{{- range $i, $line := $lines -}}
+    {{$findRules := reFind "Rules" $line}}  {{if $findRules}} {{$inRules = true}} {{end}}
+    {{$findLinks := reFind "Links" $line}}  {{if $findLinks}} {{$inLinks = true}} {{end}}
+
+    {{- if and $inRules (not $inLinks) -}}
+        {{$regex := joinStr "" "^" $ruleNum "\\." }}
+        {{if reFind $regex $line}}
+            {{$line := reReplace `<@!119360791743823872>` $line "@G Bur"}}
+            {{$line := reReplace `<@&586578472759984129>` $line "@Moderator"}}
+            {{$line}}
+        {{end}}
+    {{- end -}}
+{{- end -}}
+{{$rulesMsg := getMessage 500408739866738689 509432636494708756}}
+{{$rules := $rulesMsg.Content}}
+{{$lines := split $rules "\n"}}
+{{$linesToPrint := cslice }}
+{{$inRules := false}}
+{{$inLinks := false}}
+{{$ruleNum := reFind `\d+` .Cmd}}
+
+{{- range $i, $line := $lines -}}
+    {{$findRules := reFind "Rules" $line}}  {{if $findRules}} {{$inRules = true}} {{end}}
+    {{$findLinks := reFind "Links" $line}}  {{if $findLinks}} {{$inLinks = true}} {{end}}
+
+    {{- if and $inRules (not $inLinks) -}}
+        {{$regex := joinStr "" "^" $ruleNum "\\." }}
+        {{if reFind $regex $line}}
+            {{$line := reReplace `<@!119360791743823872>` $line "@G Bur"}}
+            {{$line := reReplace `<@&586578472759984129>` $line "@Moderator"}}
+            {{$line}}
+        {{end}}
+    {{- end -}}
+{{- end -}}

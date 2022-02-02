@@ -1,0 +1,12 @@
+---
+command: !react
+server: Tex Mechs
+description: Adds a reaction to a message as YAGPDB
+syntax: !edit ChannelID MessageID "emote"
+---
+
+{{$args := parseArgs 3 "Syntax is <channelID> <messageID> \"<emote>\""}}
+{{$channelID := index .CmdArgs 0}}
+{{$messageID := index .CmdArgs 1}}
+{{$emote := index .CmdArgs 2}}
+{{addMessageReactions $channelID $messageID $emote }}

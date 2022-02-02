@@ -1,0 +1,67 @@
+---
+command: !readmetherules
+server: Omnitype
+description: Grabs the text from the #welcome rules message, and spits out the rules line-by-line
+---
+
+{{$rulesMsg := getMessage 500408739866738689 509432636494708756}}
+{{$rules := $rulesMsg.Content}}
+{{$lines := split $rules "\n"}}
+{{$linesToPrint := cslice }}
+{{$inRules := false}}
+{{$inLinks := false}}
+
+{{range $i, $line := $lines}}
+    {{$findRules := reFind "Rules" $line}}  {{if $findRules}} {{$inRules = true}} {{end}}
+    {{$findLinks := reFind "Links" $line}}  {{if $findLinks}} {{$inLinks = true}} {{end}}
+
+    {{if and $inRules (not $inLinks) }}
+        {{$linesToPrint = $linesToPrint.Append $line}}
+    {{end}}
+
+    {{if or (eq $i (sub (len $lines) 2)) (eq $i (sub (len $lines) 1)) }}
+        {{$linesToPrint = $linesToPrint.Append $line}}
+    {{end}}
+{{end}}
+
+{{$msg := index $linesToPrint 0 }}
+{{$channel := .Message.ChannelID }}
+{{$msgID := sendMessageRetID $channel $msg }}
+
+{{- range $i, $line := $linesToPrint -}}
+    {{if gt $i 0}}
+        {{$msg = joinStr "\n" $msg $line}}
+        {{sleep 1}}
+        {{editMessage $channel $msgID $msg}}
+    {{end}}
+{{end}}{{$rulesMsg := getMessage 500408739866738689 509432636494708756}}
+{{$rules := $rulesMsg.Content}}
+{{$lines := split $rules "\n"}}
+{{$linesToPrint := cslice }}
+{{$inRules := false}}
+{{$inLinks := false}}
+
+{{range $i, $line := $lines}}
+    {{$findRules := reFind "Rules" $line}}  {{if $findRules}} {{$inRules = true}} {{end}}
+    {{$findLinks := reFind "Links" $line}}  {{if $findLinks}} {{$inLinks = true}} {{end}}
+
+    {{if and $inRules (not $inLinks) }}
+        {{$linesToPrint = $linesToPrint.Append $line}}
+    {{end}}
+
+    {{if or (eq $i (sub (len $lines) 2)) (eq $i (sub (len $lines) 1)) }}
+        {{$linesToPrint = $linesToPrint.Append $line}}
+    {{end}}
+{{end}}
+
+{{$msg := index $linesToPrint 0 }}
+{{$channel := .Message.ChannelID }}
+{{$msgID := sendMessageRetID $channel $msg }}
+
+{{- range $i, $line := $linesToPrint -}}
+    {{if gt $i 0}}
+        {{$msg = joinStr "\n" $msg $line}}
+        {{sleep 1}}
+        {{editMessage $channel $msgID $msg}}
+    {{end}}
+{{end}}

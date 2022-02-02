@@ -1,0 +1,23 @@
+---
+command: !shame
+server: Tex Mechs
+description: Find/post a user's 10 most recent deleted messages from within the last hour
+prereqs: Tools & Utilities > Logging > "Allow members with Manage Messages permissions to view deleted messages"
+---
+
+{{- if gt (len .Message.Mentions) 0 -}}
+    {{- $user := index .Message.Mentions 0 -}}
+    {{- $deleted := execAdmin "undelete -u" $user -}}
+    {{- $lines := split $deleted "\n" -}}
+    {{ $res := "" }}
+    {{- range $i, $line := $lines -}}
+        {{- if gt (len $line) 0 -}}
+            {{$res = joinStr "" $res $line "\n" }}
+        {{- end -}}
+    {{- end -}}
+    {{ if gt (len $res) 0 }}
+        {{ $image := "https://cdn.discordapp.com/attachments/680194930139856902/851991243441045564/bongo_shame_small.gif" }}
+        {{ if eq ($user.ID) (239962941623894019) }} {{$image = "https://cdn.discordapp.com/attachments/680194930139856902/851999304293679134/bongo_shame_angel_small.gif"}} {{end}}
+        {{sendMessage nil (complexMessage "content" $res "embed" (cembed "image" (sdict "url" $image)))}}
+    {{ end }}
+{{- end -}}

@@ -1,1 +1,1 @@
-# texmechs-configs
+# YAGPDB configs

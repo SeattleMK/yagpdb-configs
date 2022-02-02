@@ -1,0 +1,11 @@
+---
+command: !askamod
+server: Tex Mechs
+description: Opens a new ticket
+prereqs: Tools & Utilities > Ticket System > Tickets enabled
+---
+
+{{ $resp := (exec "ticket new" .User.Username) }}
+{{ $channel := (reFind "<#\\d{18,}>" $resp) }}
+{{ $chanID := (reFind "\\d{18,}" $channel) }}
+{{ deleteTrigger  0 }}
