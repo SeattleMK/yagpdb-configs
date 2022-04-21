@@ -1,0 +1,22 @@
+---
+trigger: Reaction (added reactions only)
+server: Tex Mechs
+description: Watches for messages from $botid in YAGPDB configured channel and awaits reactions from YAGPDB selected roles with $emoji. If total reacted is >= $count, the user is provided $role and an announcement is made in $channel.
+---
+{{$emoji = "👍"}}
+{{$botid = 172002275412279296}}
+{{if and (eq .Message.Author.ID $botid) (eq .Reaction.Emoji.Name $emoji)}}
+    {{$user := index .Message.Mentions 0}}
+    {{$role := 966776899315589140}}
+    {{$channel := 568371391771181066}}
+    {{$count = 3}}
+    {{range .ReactionMessage.Reactions}}
+        {{if and (eq .Emoji.Name $emoji) (ge .Count 3) }}
+            {{if not (targetHasRoleID $user.ID $role) }}
+                {{giveRoleID $user.ID $role}}
+                {{$msg := (printf "Welcome %v's to the regular room :sunglasses:" $user.Mention) }}
+                {{sendMessage $channel $msg}}
+            {{end}}
+        {{end}}
+    {{end}}
+{{end}}
